@@ -10,10 +10,7 @@
     sl_properties: /usr/share/tomcat/shared/classes/alfresco/web-extension/custom-slingshot-application-context.xml
 
 - name: Substitute our config vars
-  replace:
-    path: "{{ item.path }}"
-    regexp: "##{{ item.key }}##"
-    line: "{{ item.value }}"
+  command: "sed -i 's/##{{ item.key}}##/{{ item.value }}/g' {{ item.path }}"
   with_items:
     - { key: 'CONTENT_BUCKET_NAME', value: "{{bucket_name|default('')}}", path: "{{ alf_properties }}" }
     - { key: "ENCRYPTION_TYPE", value: "{{bucket_encrypt_type|default('')}}", path: "{{ alf_properties }}" }
