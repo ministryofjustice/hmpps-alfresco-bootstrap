@@ -19,7 +19,7 @@
     - { key: "ALF_DB_PASSWORD", value: "{{db_password|default('')}}", path: "{{ alf_properties }}" }
     - { key: "ALF_DB_NAME", value: "{{db_name|default('')}}", path: "{{ alf_properties }}" }
     - { key: "ALF_HOSTNAME", value: "{{db_host|default('')}}", path: "{{ alf_properties }}" }
-    - { key: "ALF_SERVERMODE", value: "{{server_mode|default('TEST')}}", path: "{{ alf_properties }}" }
+    - { key: "ALF_SERVER_MODE", value: "{{server_mode|default('TEST')}}", path: "{{ alf_properties }}" }
     - { key: "ALF_CLUSTER_NAME", value: "{{cluster_name|default('')}}", path: "{{ alf_properties }}" }
     - { key: "ALF_CLUSTER_SUBNET", value: "{{cluster_subnet|default('')}}", path: "{{ alf_properties }}" }
     - { key: "MONITORING_SERVER", value: "{{monitoring_server_url|default('')}}", path: "{{ alf_properties }}" }
