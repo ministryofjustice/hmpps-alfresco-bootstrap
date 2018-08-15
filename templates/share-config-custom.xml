@@ -1,0 +1,9 @@
+<alfresco-config>
+  <config evaluator="string-compare" condition="CSRFPolicy" replace="true">
+    <properties>
+      <token>Alfresco-CSRFToken</token>
+      <referer>{{ alfresco_protocol }}://{{ external_fqdn }}/.*</referer>
+      <origin>{{ alfresco_protocol }}://{{ external_fqdn }}</origin>
+    </properties>
+  </config>
+</alfresco-config>

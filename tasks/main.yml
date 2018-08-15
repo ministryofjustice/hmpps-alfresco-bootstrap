@@ -3,30 +3,38 @@
 - name: Gather instance facts
   ec2_facts:
   register: instance_facts
-  
-- name: Set facts
+
+- name: Get our ghostscript version
+  command: "ghostscript --version"
+  register: gs_version
+  no_log: true
+
+- name: Find our soffice.bin file
+  find:
+    paths: /
+    recurse: yes
+    patterns: "soffice.bin"
+    file_type: "file"
+  register: soffice_result
+  failed_when: soffice_result.matched == 0
+
+- name: Set template facts
   set_fact:
+    libre_office_path: "{{ soffice_result.files[0].path }}"
+    ghostscript_ver: "{{ gs_version.stdout }}"
     alf_properties: /usr/share/tomcat/shared/classes/alfresco-global.properties
-    sl_properties: /usr/share/tomcat/shared/classes/alfresco/web-extension/custom-slingshot-application-context.xml
+    csrf_properties: /usr/share/tomcat/shared/classes/alfresco/web-extension/share-config-custom.xml
+    interface_ip: "{{ instance_facts.ansible_facts.ansible_ec2_local_ipv4 }}"
 
-- name: Substitute our config vars
-  command: "sed -i 's/##{{ item.key}}##/{{ item.value }}/g' {{ item.path }}"
+- name: Create our templated config files
+  template:
+    src: "{{ role_path }}/templates/{{ item.file }}"
+    dest: "{{ item.dest }}"
   with_items:
-    - { key: 'CONTENT_BUCKET_NAME', value: "{{bucket_name|default('')}}", path: "{{ alf_properties }}" }
-    - { key: "ENCRYPTION_TYPE", value: "{{bucket_encrypt_type|default('')}}", path: "{{ alf_properties }}" }
-    - { key: "KMS_KEY_ID", value: "{{bucket_key_id|default('')}}", path: "{{ alf_properties }}" }
-    - { key: "ALF_DB_USER", value: "{{db_user|default('')}}", path: "{{ alf_properties }}" }
-    - { key: "ALF_DB_PASSWORD", value: "{{db_password|default('')}}", path: "{{ alf_properties }}" }
-    - { key: "ALF_DB_NAME", value: "{{db_name|default('')}}", path: "{{ alf_properties }}" }
-    - { key: "ALF_HOSTNAME", value: "{{db_host|default('')}}", path: "{{ alf_properties }}" }
-    - { key: "ALF_SERVER_MODE", value: "{{server_mode|default('TEST')}}", path: "{{ alf_properties }}" }
-    - { key: "ALF_CLUSTER_NAME", value: "{{cluster_name|default('')}}", path: "{{ alf_properties }}" }
-    - { key: "ALF_CLUSTER_SUBNET", value: "{{cluster_subnet|default('')}}", path: "{{ alf_properties }}" }
-    - { key: "MONITORING_SERVER", value: "{{monitoring_server_url|default('')}}", path: "{{ alf_properties }}" }
-    - { key: "ES_CLUSTER_NAME", value: "{{monitoring_cluster_name|default('')}}", path: "{{ alf_properties }}" }
-    - { key: "INTERFACE_IP", value: "{{instance_facts.ansible_facts.ansible_ec2_local_ipv4|default('0.0.0.0')}}" , path: "{{ sl_properties }}" }
+    - { file: "alfresco-global.properties", dest: "{{ alf_properties }}" }
+    - { file: "share-config-custom.xml", dest: "{{ csrf_properties }}" }
 
-- name: Start tomcat
+- name: Start alfresco
   service:
-    name: tomcat
+    name: tomcat-alfresco
     state: started
