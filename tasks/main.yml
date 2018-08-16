@@ -34,6 +34,13 @@
     - { file: "alfresco-global.properties", dest: "{{ alf_properties }}" }
     - { file: "share-config-custom.xml", dest: "{{ csrf_properties }}" }
 
+- name: Ensure our mounts have the correct permissions
+  file:
+    owner: tomcat
+    group: tomcat
+    dest: /srv/cache
+    recurse: true
+
 - name: Start alfresco
   service:
     name: tomcat-alfresco
