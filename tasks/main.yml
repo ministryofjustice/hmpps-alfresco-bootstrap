@@ -25,6 +25,7 @@
     alf_properties: /usr/share/tomcat/shared/classes/alfresco-global.properties
     csrf_properties: /usr/share/tomcat/shared/classes/alfresco/web-extension/share-config-custom.xml
     interface_ip: "{{ instance_facts.ansible_facts.ansible_ec2_local_ipv4 }}"
+    slingshot_properties: /usr/share/tomcat/shared/classes/alfresco/web-extension/custom-slingshot-application-context.xml
 
 - name: Create our templated config files
   template:
@@ -32,6 +33,7 @@
     dest: "{{ item.dest }}"
   with_items:
     - { file: "alfresco-global.properties", dest: "{{ alf_properties }}" }
+    - { file: "custom-slingshot-application-context.xml", dest: "{{ slingshot_properties }}" }
     - { file: "share-config-custom.xml", dest: "{{ csrf_properties }}" }
 
 - name: Ensure our mounts have the correct permissions
