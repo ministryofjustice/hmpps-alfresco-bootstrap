@@ -21,7 +21,7 @@
          <hz:network port="5801" port-auto-increment="true">
             <hz:join>
                <hz:multicast enabled="true"
-                     multicast-group="2true24.2.2.5"
+                     multicast-group="224.2.2.5"
                      multicast-port="54327"/>
                <hz:tcp-ip enabled="false">
                   <hz:members></hz:members>
