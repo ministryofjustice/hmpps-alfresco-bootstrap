@@ -43,6 +43,12 @@
     dest: /srv/cache
     recurse: true
 
+- name: Install our custom service
+  service:
+    name: tomcat-alfresco
+    state: stopped
+    enabled: true
+
 - name: Start alfresco
   service:
     name: tomcat-alfresco
