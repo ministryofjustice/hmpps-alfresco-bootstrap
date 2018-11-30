@@ -1,0 +1,27 @@
+filter {
+    if [fields][document_type] == "alfresco" {
+        grok {
+            match => [ "message", "%{SYSLOGTIMESTAMP} (?:%{SYSLOGHOST} )?%{DATA}: %{GREEDYDATA:data}" ]
+            overwrite => ["message"]
+        }
+        multiline {
+            pattern => "%{GREEDYDATA}\.\.\.$"
+            what => "next"
+        }
+        mutate {
+            # To join multiline messages into one
+            gsub => [
+                    "data", "^\.\.\.", "",
+                    "data", "\.\.\.$", ""
+            ]
+            join => ["data",""]
+        }
+        json {
+                # Parse JSON audit data
+                source => "data"
+                target => "audit"
+                #remove data and message fields
+                remove_field => [ "data", "message" ]
+        }
+    }
+}

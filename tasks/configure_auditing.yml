@@ -1,0 +1,71 @@
+---
+
+- name: Stop our services to reconfigure them
+  service:
+    name: "{{ item }}"
+    state: stopped
+  with_items:
+    - logstash
+    - filebeat
+    - rsyslog
+  become: true
+
+- name: Set our grok pattern directory
+  set_fact:
+    grok_dir: /opt/logstash/patterns
+
+- name: Ensure our grok filter directory exists
+  file:
+    path: "{{ grok_dir }}"
+    state: directory
+  become: true
+
+- name: Add our grok filters
+  copy:
+    src: "{{ role_path }}/files/logstash/grok/{{ item }}"
+    dest: "{{ grok_dir }}/{{ item }}"
+  with_items:
+    - nginx
+    - tomcat
+  become: true
+
+- name: Update our logstash pipeline files
+  template:
+    src: "{{ role_path }}/templates/logstash/{{ item }}.j2"
+    dest: "/etc/logstash/conf.d/{{ item }}"
+  with_items:
+    - "01-logstash-filebeat-input.conf"
+    - "10-alfresco_audit.conf"
+    - "20_catalina.conf"
+    - "30_nginx-access.conf"
+    - "50_logstash-output.conf"
+  become: true
+
+- name: Create our filebeat config
+  template:
+    src: "{{ role_path }}/templates/filebeat.yml"
+    dest: "/etc/filebeat/filebeat.yml"
+  become: true
+
+- name: Update our rsyslog.conf
+  blockinfile:
+    path: "/etc/rsyslog.conf"
+    block: |
+      auth,user.* /var/log/messages
+      kern.* /var/log/kern.log
+      daemon.* /var/log/daemon.log
+      syslog.* /var/log/syslog
+      lpr,news,uucp,local0,local1,local2,local3,local4,local5,local6.* /var/log/unused.log
+    insertafter: "# ### end of the forwarding rule ###"
+    backup: yes
+  become: true
+
+- name: Start our services post reconfiguration
+  service:
+    name: "{{ item }}"
+    state: started
+  with_items:
+    - logstash
+    - filebeat
+    - rsyslog
+  become: true

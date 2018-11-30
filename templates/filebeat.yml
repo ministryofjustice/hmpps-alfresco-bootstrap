@@ -1,0 +1,60 @@
+---
+################### Filebeat Configuration Example #########################
+
+############################# Filebeat ######################################
+filebeat:
+  prospectors:
+    - paths:
+        - /var/log/*.log
+      encoding: utf-8
+      type: log
+      multiline:
+        pattern: ^\[
+        negate: false
+        match: after
+        max_lines: 500
+        timeout: 5s
+    - paths:
+        - /var/log/nginx/access.log
+      fields:
+        document_type: nginx-access
+    - paths:
+        - /usr/share/tomcat/logs/catalina.out
+      fields:
+        document_type: catalina
+    - paths:
+        - /var/log/audit.log
+      fields:
+        document_type: alfresco
+
+{% if ansible_env.HAS_DOCKER|default(False) %}
+    - paths:
+        - /var/lib/docker/containers/*/*.log
+      encoding: utf-8
+      type: log
+{% endif -%}
+
+output:
+  logstash:
+    hosts: ["localhost:5044"]
+    index: filebeat
+
+#========================== General ==================================
+tags: [
+    "{{ lookup('env', 'HMPPS_ROLE')}}",
+    "{{ lookup('env', 'HMPPS_STACK')}}",
+    "{{ lookup('env', 'HMPPS_FQDN')}}"
+  ]
+
+
+############################# Logging #########################################
+
+logging:
+  to_syslog: false
+  to_files: true
+  files:
+    path: /var/log/filebeat
+    name: filebeat-zaizi.log
+    rotateeverybytes: 10485760 # = 10MB
+    keepfiles: 7
+  level: "{{ debug_level|default('info') }}"
