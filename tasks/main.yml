@@ -4,6 +4,9 @@
   ec2_facts:
   register: instance_facts
 
+- name: Reconfigure our logging services so we audit correctly
+  include: configure_auditing.yml
+
 - name: Get our ghostscript version
   command: "ghostscript --version"
   register: gs_version

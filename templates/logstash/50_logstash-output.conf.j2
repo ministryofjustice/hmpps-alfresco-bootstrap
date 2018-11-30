@@ -1,0 +1,14 @@
+output {
+    stdout { }
+    if [type] == "alfresco" {
+        elasticsearch {
+            hosts => "{{ monitoring_host }}"
+            index => "logstash-alfresco-%{+YYYY.MM.dd}"
+        }
+    } else {
+        elasticsearch {
+            hosts => "{{ monitoring_host }}"
+            index => "logstash-production_logs-%{+YYYY.MM.dd}"
+        }
+    }
+}
