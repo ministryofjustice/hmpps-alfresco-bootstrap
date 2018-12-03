@@ -58,8 +58,8 @@ logging:
   to_syslog: false
   to_files: true
   files:
-    path: /var/log/filebeat
-    name: filebeat-zaizi.log
+    path: /var/log/beats
+    name: filebeat
     rotateeverybytes: 10485760 # = 10MB
     keepfiles: 7
   level: "{{ debug_level|default('info') }}"
