@@ -4,10 +4,6 @@ filter {
             match => [ "message", "%{SYSLOGTIMESTAMP} (?:%{SYSLOGHOST} )?%{DATA}: %{GREEDYDATA:data}" ]
             overwrite => ["message"]
         }
-        multiline {
-            pattern => "%{GREEDYDATA}\.\.\.$"
-            what => "next"
-        }
         mutate {
             # To join multiline messages into one
             gsub => [

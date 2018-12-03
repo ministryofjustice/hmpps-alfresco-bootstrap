@@ -37,7 +37,6 @@
     - "01-logstash-filebeat-input.conf"
     - "10-alfresco_audit.conf"
     - "20_catalina.conf"
-    - "30_nginx-access.conf"
     - "50_logstash-output.conf"
   become: true
 
