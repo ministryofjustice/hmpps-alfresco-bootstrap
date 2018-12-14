@@ -39,6 +39,11 @@ output:
     hosts: ["localhost:5044"]
     index: filebeat
 
+multiline:
+  pattern: '^\[[0-9]{4}-[0-9]{2}-[0-9]{2}'
+  negate: true
+  match: after
+
 #========================== General ==================================
 tags: [
     "{{ lookup('env', 'HMPPS_ROLE')}}",
@@ -53,8 +58,8 @@ logging:
   to_syslog: false
   to_files: true
   files:
-    path: /var/log/filebeat
-    name: filebeat-zaizi.log
+    path: /var/log/beats
+    name: filebeat
     rotateeverybytes: 10485760 # = 10MB
     keepfiles: 7
   level: "{{ debug_level|default('info') }}"

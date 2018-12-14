@@ -1,10 +1,5 @@
 filter {
     if [fields][document_type] == "catalina" {
-            multiline {
-                    pattern => "(^%{TOMCAT_DATESTAMP})|(^%{CATALINA_DATESTAMP})"
-                    negate => true
-            what => "previous"
-            }
             if "_grokparsefailure" in [tags] {
                     drop { }
             }
