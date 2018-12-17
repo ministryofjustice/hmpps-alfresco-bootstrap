@@ -24,4 +24,5 @@ Role Variables
 - cluster_subnet # alfresco cluster subnet
 - monitoring_server_url # ingest node url for elasticsearch
 - monitoring_cluster_name # name of elasticsearch cluster
+- logstash_index #defaults to alfresco-logstash, used for reading and writing of audit events
 ```
