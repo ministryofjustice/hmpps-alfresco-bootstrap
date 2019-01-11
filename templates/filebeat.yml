@@ -31,7 +31,7 @@ filebeat:
         - /var/log/audit.log
       fields:
         document_type: alfresco
-      tags:["alfresco-audit"]
+      tags: ["alfresco-audit"]
     - type: log
       paths:
         - /usr/share/tomcat/alfresco.log
