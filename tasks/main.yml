@@ -7,6 +7,23 @@
 - name: Reconfigure our logging services so we audit correctly
   include: configure_auditing.yml
 
+- name: Ensure we have our alfresco logging directory in place
+  file:
+    path: /usr/share/tomcat/shared/classes/extension
+    state: directory
+    owner: tomcat
+    group: tomcat
+    mode: 775
+  become: true
+
+- name: Ensure we have our logging properties installed
+  copy:
+    src: "{{ role_path }}/files/log4j.properties"
+    dest: /usr/share/tomcat/shared/classes/extension/log4j.properties
+    owner: tomcat
+    group: tomcat
+  become: true
+
 - name: Get our ghostscript version
   command: "ghostscript --version"
   register: gs_version

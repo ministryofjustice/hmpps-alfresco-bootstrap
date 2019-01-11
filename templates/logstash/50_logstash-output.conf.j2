@@ -1,9 +1,7 @@
 output {
     stdout { }
     elasticsearch {
-        host => "{{ monitoring_host }}"
+        hosts => ["{{ monitoring_host }}"]
         index => "{{ logstash_index|default('alfresco-logstash') }}-%{+YYYY.MM.dd}"
-        protocol => http
-        port => 9200
     }
 }
