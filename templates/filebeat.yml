@@ -4,29 +4,40 @@
 ############################# Filebeat ######################################
 filebeat:
   prospectors:
-    - paths:
+    - type: log
+      paths:
         - /var/log/*.log
       encoding: utf-8
-      type: log
       multiline:
         pattern: ^\[
         negate: false
         match: after
         max_lines: 500
         timeout: 5s
-    - paths:
+    - type: log
+      paths:
         - /var/log/nginx/access.log
       fields:
         document_type: nginx-access
-    - paths:
+      tags: ["nginx"]
+    - type: log
+      paths:
         - /usr/share/tomcat/logs/catalina.out
       fields:
         document_type: catalina
-    - paths:
+      tags: ["catalina"]
+    - type: log
+      paths:
         - /var/log/audit.log
       fields:
         document_type: alfresco
-
+      tags: ["alfresco-audit"]
+    - type: log
+      paths:
+        - /usr/share/tomcat/alfresco.log
+      fields:
+        document_type: alfresco
+      tags: ["alfresco"]
 {% if ansible_env.HAS_DOCKER|default(False) %}
     - paths:
         - /var/lib/docker/containers/*/*.log
