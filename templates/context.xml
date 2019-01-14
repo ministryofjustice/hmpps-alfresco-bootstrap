@@ -5,7 +5,7 @@
     {% domain = lookup('env', 'HMPPS_DOMAIN') or '' -%}
     {% if domain != '' -%}
     <Manager className="de.javakaffee.web.msm.MemcachedBackupSessionManager"
-             memcachedNodes="{{ memcached_host|default('memcache.'+lookup('env', 'HMPPS_DOMAIN'))}}|{{ memcached_port|default('11211') }}"
+             memcachedNodes="{{ memcached_url|default('memcached.'+lookup('env', 'HMPPS_DOMAIN'))}}|{{ memcached_port|default('11211') }}"
              sticky="false"
              sessionBackupAsync="false"
              lockingMode="auto"

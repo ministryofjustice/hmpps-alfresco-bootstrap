@@ -25,4 +25,6 @@ Role Variables
 - monitoring_server_url # ingest node url for elasticsearch
 - monitoring_cluster_name # name of elasticsearch cluster
 - logstash_index #defaults to alfresco-logstash, used for reading and writing of audit events
+- memcached_url #to override our default url for shared sessions defaults to `memcached.<project>.internal`
+- memcached_port # to override our default port, default is 11211
 ```

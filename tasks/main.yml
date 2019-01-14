@@ -57,6 +57,17 @@
     - { file: "share-config-custom.xml", dest: "{{ csrf_properties }}" }
     - { file: "context.xml", dest: "/usr/share/tomcat/conf/context.xml" }
 
+- name: Download our shared session jar files, this will move to the packer builder
+  get_url:
+    url: "{{ item }}"
+    dest: "/usr/share/tomcat/lib/{{ item|basename }}"
+    owner: tomcat
+    group: tomcat
+  with_items:
+    - https://repo1.maven.org/maven2/de/javakaffee/msm/memcached-session-manager/2.3.2/memcached-session-manager-2.3.2.jar
+    - https://repo1.maven.org/maven2/de/javakaffee/msm/memcached-session-manager-tc7/2.3.2/memcached-session-manager-tc7-2.3.2.jar
+    - https://repo1.maven.org/maven2/net/spy/spymemcached/2.12.3/spymemcached-2.12.3.jar
+
 - name: Ensure our mounts have the correct permissions
   file:
     owner: tomcat
