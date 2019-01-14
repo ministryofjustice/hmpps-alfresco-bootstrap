@@ -55,6 +55,7 @@
     - { file: "alfresco-global.properties", dest: "{{ alf_properties }}" }
     - { file: "custom-slingshot-application-context.xml", dest: "{{ slingshot_properties }}" }
     - { file: "share-config-custom.xml", dest: "{{ csrf_properties }}" }
+    - { file: "context.xml", dest: "/usr/share/tomcat/conf/context.xml" }
 
 - name: Ensure our mounts have the correct permissions
   file:
