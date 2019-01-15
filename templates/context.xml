@@ -2,7 +2,7 @@
 <Context>
     <WatchedResource>WEB-INF/web.xml</WatchedResource>
 
-    {% domain = lookup('env', 'HMPPS_DOMAIN') or '' -%}
+    {% set domain = lookup('env', 'HMPPS_DOMAIN') or '' -%}
     {% if domain != '' -%}
     <Manager className="de.javakaffee.web.msm.MemcachedBackupSessionManager"
              memcachedNodes="{{ memcached_url|default('memcached.'+lookup('env', 'HMPPS_DOMAIN'))}}|{{ memcached_port|default('11211') }}"
