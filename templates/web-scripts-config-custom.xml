@@ -1,0 +1,128 @@
+<alfresco-config>
+    <config evaluator="string-compare" condition="CSRFPolicy" replace="true">
+        <session>true</session>
+        <properties>
+            <token>Alfresco-CSRFToken</token>
+            <referer>{{ alfresco_protocol }}://{{ external_fqdn }}/.*</referer>
+            <origin>{{ alfresco_protocol }}://{{ external_fqdn }}</origin>
+        </properties>
+        <client>
+            <cookie>{token}</cookie>
+            <header>{token}</header>
+            <parameter>{token}</parameter>
+        </client>
+        <filter>
+            <rule>
+                <request>
+                    <method>GET</method>
+                    <path>/service/enterprise/admin/.*</path>
+                </request>
+                <action name="generateToken">
+                    <param name="session">{token}</param>
+                    <param name="cookie">{token}</param>
+                </action>
+            </rule>
+            <rule>
+                <request>
+                    <method>GET</method>
+                    <path>/s/enterprise/admin/.*</path>
+                </request>
+                <action name="generateToken">
+                    <param name="session">{token}</param>
+                    <param name="cookie">{token}</param>
+                </action>
+            </rule>
+            <rule>
+                <request>
+                    <method>GET</method>
+                    <path>/wcservice/enterprise/admin/.*</path>
+                </request>
+                <action name="generateToken">
+                    <param name="session">{token}</param>
+                    <param name="cookie">{token}</param>
+                </action>
+            </rule>
+            <rule>
+                <request>
+                    <method>GET</method>
+                    <path>/wcs/enterprise/admin/.*</path>
+                </request>
+                <action name="generateToken">
+                    <param name="session">{token}</param>
+                    <param name="cookie">{token}</param>
+                </action>
+            </rule>
+            <rule>
+                <request>
+                    <method>GET</method>
+                    <path>/service/admin/.*</path>
+                </request>
+                <action name="generateToken">
+                    <param name="session">{token}</param>
+                    <param name="cookie">{token}</param>
+                </action>
+            </rule>
+            <rule>
+                <request>
+                    <method>GET</method>
+                    <path>/s/admin/.*</path>
+                </request>
+                <action name="generateToken">
+                    <param name="session">{token}</param>
+                    <param name="cookie">{token}</param>
+                </action>
+            </rule>
+            <rule>
+                <request>
+                    <method>GET</method>
+                    <path>/wcservice/admin/.*</path>
+                </request>
+                <action name="generateToken">
+                    <param name="session">{token}</param>
+                    <param name="cookie">{token}</param>
+                </action>
+            </rule>
+            <rule>
+                <request>
+                    <method>GET</method>
+                    <path>/wcs/admin/.*</path>
+                </request>
+                <action name="generateToken">
+                    <param name="session">{token}</param>
+                    <param name="cookie">{token}</param>
+                </action>
+            </rule>
+            <rule>
+                <request>
+                    <method>POST</method>
+                    <header name="Content-Type">multipart/.+</header>
+                </request>
+                <action name="assertToken">
+                    <param name="session">{token}</param>
+                    <param name="parameter">{token}</param>
+                </action>
+                <action name="assertReferer">
+                    <param name="referer">{referer}</param>
+                </action>
+                <action name="assertOrigin">
+                    <param name="origin">{origin}</param>
+                </action>
+            </rule>
+            <rule>
+                <request>
+                    <method>POST|PUT|DELETE</method>
+                </request>
+                <action name="assertToken">
+                    <param name="session">{token}</param>
+                    <param name="header">{token}</param>
+                </action>
+                <action name="assertReferer">
+                    <param name="referer">{referer}</param>
+                </action>
+                <action name="assertOrigin">
+                    <param name="origin">{origin}</param>
+                </action>
+            </rule>
+        </filter>
+    </config>
+</alfresco-config>
