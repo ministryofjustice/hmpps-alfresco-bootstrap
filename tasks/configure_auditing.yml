@@ -59,6 +59,19 @@
     backup: yes
   become: true
 
+- name: Comment out our rsyslog forwarding rule
+  lineinfile:
+    path: /etc/rsyslog.conf
+    regexp: '^*.* @@monitoring.alfresco-dev.internal:2514'
+    line: '# *.* @@monitoring.alfresco-dev.internal:2514'
+  become: true
+
+- name: Restart rsyslog
+  service:
+    name: rsyslog
+    state: restarted
+  become: true
+
 - name: Start our services post reconfiguration
   service:
     name: "{{ item }}"
