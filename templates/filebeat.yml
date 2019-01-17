@@ -35,7 +35,7 @@ filebeat:
         - /usr/share/tomcat/logs/catalina.out
       fields:
         document_type: catalina
-      tags: ["catalina"]
+      tags: ["tomcat"]
     - type: log
       paths:
         - /var/log/audit.log
@@ -47,7 +47,13 @@ filebeat:
         - /usr/share/tomcat/alfresco.log
       fields:
         document_type: alfresco
-      tags: ["alfresco"]
+      tags: ["alfresco-log"]
+      multiline:
+        pattern: ^\[
+        negate: false
+        match: after
+        max_lines: 500
+        timeout: 5s
 {% if ansible_env.HAS_DOCKER|default(False) %}
     - paths:
         - /var/lib/docker/containers/*/*.log
