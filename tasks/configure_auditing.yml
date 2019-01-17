@@ -65,6 +65,7 @@
     regexp: '^*.* @@monitoring.alfresco-dev.internal:2514'
     line: '# *.* @@monitoring.alfresco-dev.internal:2514'
   become: true
+  ignore_errors: true
 
 - name: Restart rsyslog
   service:
