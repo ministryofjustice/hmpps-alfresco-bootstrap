@@ -6,7 +6,17 @@ filebeat:
   prospectors:
     - type: log
       paths:
-        - /var/log/*.log
+        - /var/log/*
+      encoding: utf-8
+      multiline:
+        pattern: ^\[
+        negate: false
+        match: after
+        max_lines: 500
+        timeout: 5s
+    - type: log
+      paths:
+        - /var/log/*.*
       encoding: utf-8
       multiline:
         pattern: ^\[
