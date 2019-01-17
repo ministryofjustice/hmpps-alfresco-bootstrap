@@ -6,7 +6,17 @@ filebeat:
   prospectors:
     - type: log
       paths:
-        - /var/log/*.log
+        - /var/log/*
+      encoding: utf-8
+      multiline:
+        pattern: ^\[
+        negate: false
+        match: after
+        max_lines: 500
+        timeout: 5s
+    - type: log
+      paths:
+        - /var/log/*.*
       encoding: utf-8
       multiline:
         pattern: ^\[
@@ -25,10 +35,10 @@ filebeat:
         - /usr/share/tomcat/logs/catalina.out
       fields:
         document_type: catalina
-      tags: ["catalina"]
+      tags: ["tomcat"]
     - type: log
       paths:
-        - /var/log/audit.log
+        - /var/log/alfresco/audit.log
       fields:
         document_type: alfresco
       tags: ["alfresco-audit"]
@@ -37,7 +47,13 @@ filebeat:
         - /usr/share/tomcat/alfresco.log
       fields:
         document_type: alfresco
-      tags: ["alfresco"]
+      tags: ["alfresco-log"]
+      multiline:
+        pattern: ^\[
+        negate: false
+        match: after
+        max_lines: 500
+        timeout: 5s
 {% if ansible_env.HAS_DOCKER|default(False) %}
     - paths:
         - /var/lib/docker/containers/*/*.log
