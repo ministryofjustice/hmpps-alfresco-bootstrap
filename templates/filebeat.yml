@@ -37,8 +37,12 @@ filebeat:
         document_type: catalina
       tags: ["tomcat"]
     - type: log
+      enabled: true
       paths:
         - /var/log/alfresco/audit.log
+      multiline.pattern: '^[a-zA-Z]{3}\s{1,}[0-9]{1,} [0-9]{2}:[0-9]{2}:[0-9]{2} \w+ \w+: \.{3}.*$'
+      multiline.negate: false
+      multiline.match: after
       fields:
         document_type: alfresco
       tags: ["alfresco-audit"]
