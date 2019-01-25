@@ -87,6 +87,31 @@
     - /srv/alf_data/contentstore
     - /srv/alf_data/contentstore.deleted
 
+- name: Get our installed package list
+  yum:
+    list: installed
+  register: packages_installed
+
+- name: Set nginx_installed fact
+  set_fact:
+    nginx_installed: "{{ packages_installed.results|selectattr('name', 'search', 'nginx')|list|length }}"
+
+- block:
+    - name: Install our templates
+      template:
+        src: "{{ role_path }}/templates/app.conf.j2"
+        dest: "/etc/nginx/conf.d/app.conf"
+        group: nginx
+        user: nginx
+
+    - name: Start our nginx service
+      service:
+        name: nginx
+        state: started
+
+  when:
+    - nginx_installed > 0
+
 # To be removed as we are using base tomcat, currently we still have the service in play on integration, it is removed in
 # alf ami's going forward but we'll cause issues if we remove it from here for now
 - name: Install our custom service
