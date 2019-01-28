@@ -109,18 +109,3 @@
 
   when:
     - nginx_installed > 0
-
-# To be removed as we are using base tomcat, currently we still have the service in play on integration, it is removed in
-# alf ami's going forward but we'll cause issues if we remove it from here for now
-- name: Install our custom service
-  service:
-    name: tomcat-alfresco
-    state: stopped
-    enabled: true
-  ignore_errors: true
-
-- name: Start alfresco
-  service:
-    name: tomcat-alfresco
-    state: started
-  ignore_errors: true
