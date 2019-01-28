@@ -78,7 +78,7 @@
     recurse: true
 
 - name: Mount our efs volumes
-  include_role: efs.yml
+  include: efs.yml
 
 - name: Get our installed package list
   yum:
