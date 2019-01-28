@@ -77,15 +77,8 @@
     dest: /srv/cache
     recurse: true
 
-- name: Ensure we have our correct repo dirs on the mount
-  file:
-    state: directory
-    path:  "{{ item }}"
-    owner: tomcat
-    group: tomcat
-  with_items:
-    - /srv/alf_data/contentstore
-    - /srv/alf_data/contentstore.deleted
+- name: Mount our efs volumes
+  include_role: efs.yml
 
 - name: Get our installed package list
   yum:
