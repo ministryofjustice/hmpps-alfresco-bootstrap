@@ -99,10 +99,10 @@
 - block:
     - name: Install our templates
       template:
-        src: "{{ role_path }}/templates/app.conf.j2"
+        src: "{{ role_path }}/templates/nginx/app.conf.j2"
         dest: "/etc/nginx/conf.d/app.conf"
         group: nginx
-        user: nginx
+        owner: nginx
 
     - name: Start our nginx service
       service:
