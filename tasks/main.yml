@@ -16,7 +16,7 @@
     mode: 775
   become: true
   with_items:
-    - webapps/alfresco/WEB-INF/classes/
+#    - webapps/alfresco/WEB-INF/classes/
     - shared/classes/extension
 
 - name: Ensure we have our logging properties installed
@@ -27,7 +27,7 @@
     group: tomcat
   become: true
   with_items:
-    - webapps/alfresco/WEB-INF/classes/log4j.properties
+#    - webapps/alfresco/WEB-INF/classes/log4j.properties
     - shared/classes/extension/log4j.properties
 
 - name: Get our ghostscript version
