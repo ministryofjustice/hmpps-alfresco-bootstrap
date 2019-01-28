@@ -7,14 +7,17 @@
 - name: Reconfigure our logging services so we audit correctly
   include: configure_auditing.yml
 
-- name: Ensure we have our alfresco logging directory in place
+- name: Ensure we have our alfresco logging directories in place
   file:
-    path: /usr/share/tomcat/shared/classes/extension
+    path: "/usr/share/tomcat/{{ item }}"
     state: directory
     owner: tomcat
     group: tomcat
     mode: 775
   become: true
+  with_items:
+    - webapps/alfresco/WEB-INF/classes/
+    - shared/classes/extension
 
 - name: Ensure we have our logging properties installed
   copy:
