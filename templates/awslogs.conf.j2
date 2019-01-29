@@ -67,6 +67,12 @@ log_group_name = {{ cldwatch_log_group }}
 log_stream_name = {{ hostname }}/alfresco_log
 datetime_format = %b %d %H:%M:%S
 
+[/usr/share/tomcat/alfresco.log]
+file = /usr/share/tomcat/alfresco.log
+log_group_name = {{ cldwatch_log_group }}
+log_stream_name = {{ hostname }}/alfresco_log
+datetime_format = %b %d %H:%M:%S
+
 [/var/log/alfresco/audit.log]
 file = /var/log/alfresco/audit.log
 log_group_name = {{ cldwatch_log_group }}
