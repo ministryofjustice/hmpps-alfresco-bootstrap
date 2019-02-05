@@ -13,6 +13,7 @@
     mode: 0775
     owner: tomcat
     group: tomcat
+    recurse: yes
   with_items:
     - /srv/alf_data/contentstore
     - /srv/alf_data/contentstore.deleted
@@ -38,3 +39,16 @@
     fstype: nfs4
     opts: nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport
     state: mounted
+
+- name: Ensure directories exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0775
+    owner: tomcat
+    group: tomcat
+    recurse: yes
+  become: true
+  with_items:
+    - /srv/alf_data/contentstore
+    - /srv/alf_data/contentstore.deleted
