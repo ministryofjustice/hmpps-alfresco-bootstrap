@@ -53,17 +53,22 @@
     admin_properties: /usr/share/tomcat/shared/classes/alfresco/extension/web-scripts-config-custom.xml
     interface_ip: "{{ instance_facts.ansible_facts.ansible_ec2_local_ipv4 }}"
     slingshot_properties: /usr/share/tomcat/shared/classes/alfresco/web-extension/custom-slingshot-application-context.xml
+    hz_aws_properties: /usr/share/tomcat/shared/classes/alfresco/extension/hazelcast-tcp.xml
 
 - name: Create our templated config files
   template:
     src: "{{ role_path }}/templates/{{ item.file }}"
     dest: "{{ item.dest }}"
+    owner: tomcat
+    group: tomcat
   with_items:
     - { file: "alfresco-global.properties", dest: "{{ alf_properties }}" }
     - { file: "custom-slingshot-application-context.xml", dest: "{{ slingshot_properties }}" }
     - { file: "share-config-custom.xml", dest: "{{ csrf_properties }}" }
     - { file: "web-scripts-config-custom.xml", dest: "{{ admin_properties }}" }
     - { file: "context.xml", dest: "/usr/share/tomcat/conf/context.xml" }
+    - { file: "hazelcast-tcp.xml", dest: "{{ hz_aws_properties }}" }
+
 
 - name: Download our shared session jar files, this will move to the packer builder
   get_url:
@@ -115,3 +120,11 @@
 
   when:
     - nginx_installed > 0
+
+- name: Get hazelcast aws plugin
+  get_url:
+    url: https://github.com/hazelcast/hazelcast-aws/releases/download/v2.2/hazelcast-aws-2.2.jar
+    dest: /usr/share/tomcat/lib/hazelcast-aws-2.2.jar
+    owner: tomcat
+    group: tomcat
+

@@ -27,14 +27,14 @@
                   <hz:members>{{ interface_ip|wildcard_ip }}</hz:members>
                </hz:tcp-ip>
             </hz:join>
-            <hz:interfaces enabled="false">
+            <hz:interfaces enabled="${alfresco.cluster.specify.interface}">
                <hz:interface>{{ interface_ip }}</hz:interface>
             </hz:interfaces>
          </hz:network>
       </hz:config>
    </hz:hazelcast>
    <bean id="webframework.cluster.clusterservice" class="org.alfresco.web.site.ClusterTopicService" init-method="init">
-      <property name="hazelcastInstance" ref="webframework.cluster.slingshot" />
+      <property name="hazelcastInstance" ref="webframework.clu:jor.slingshot" />
       <property name="hazelcastTopicName"><value>slingshot-topic</value></property>
    </bean>
 </beans>
