@@ -18,14 +18,14 @@
         <multicast-group>224.2.2.3</multicast-group>
         <multicast-port>54327</multicast-port>
       </multicast>
-      <tcp-ip enabled="true">
+      <tcp-ip enabled="false">
         <members>{{ interface_ip|wildcard_ip }}</members>
       </tcp-ip>
-       <aws enabled="true">
+      <aws enabled="true">
         <!--optional, default is us-east-1 -->
         <region>{{ aws_region|default('eu-west-2')}}</region>
         <!-- optional, only instances belonging to this group will be discovered, default will try all running instances -->
-        <security-group-name></security-group-name>
+        <security-group-name>alfresco-dev-delius-core-alfresco-api-in</security-group-name>
         <tag-key>type</tag-key>
         <tag-value>hz-nodes</tag-value>
       </aws>
