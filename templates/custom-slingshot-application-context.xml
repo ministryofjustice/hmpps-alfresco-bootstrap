@@ -23,26 +23,18 @@
                <hz:multicast enabled="false"
                      multicast-group="224.2.2.5"
                      multicast-port="54327"/>
-               <hz:tcp-ip enabled="false">
+               <hz:tcp-ip enabled="true">
                   <hz:members>{{ interface_ip|wildcard_ip }}</hz:members>
                </hz:tcp-ip>
-                  <hz:aws enabled="true">
-                    <!--optional, default is us-east-1 -->
-                    <hz:region>{{ aws_region|default('eu-west-2')}}</hz:region>
-                    <!-- optional, only instances belonging to this group will be discovered, default will try all running instances -->
-                    <hz:security-group-name>alfresco-dev-delius-core-alfresco-api-in</hz:security-group-name>
-                    <hz:tag-key>type</hz:tag-key>
-                    <hz:tag-value>hz-nodes</hz:tag-value>
-               </hz:aws>
             </hz:join>
-            <hz:interfaces enabled="${alfresco.cluster.specify.interface}">
+            <hz:interfaces enabled="false">
                <hz:interface>{{ interface_ip }}</hz:interface>
             </hz:interfaces>
          </hz:network>
       </hz:config>
    </hz:hazelcast>
    <bean id="webframework.cluster.clusterservice" class="org.alfresco.web.site.ClusterTopicService" init-method="init">
-      <property name="hazelcastInstance" ref="webframework.clu:jor.slingshot" />
+      <property name="hazelcastInstance" ref="webframework.cluster.slingshot" />
       <property name="hazelcastTopicName"><value>slingshot-topic</value></property>
    </bean>
 </beans>
