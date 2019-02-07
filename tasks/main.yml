@@ -53,7 +53,15 @@
     admin_properties: /usr/share/tomcat/shared/classes/alfresco/extension/web-scripts-config-custom.xml
     interface_ip: "{{ instance_facts.ansible_facts.ansible_ec2_local_ipv4 }}"
     slingshot_properties: /usr/share/tomcat/shared/classes/alfresco/web-extension/custom-slingshot-application-context.xml
-    hz_aws_properties: /usr/share/tomcat/shared/classes/alfresco/extension/hazelcast-tcp.xml
+    hz_aws_properties: /usr/share/tomcat/shared/classes/alfresco/hazelcast/hazelcast-tcp.xml
+
+- name: Ensure we have our hazlecast properties dir
+  file:
+    dest: /usr/share/tomcat/shared/classes/alfresco/hazelcast
+    state: directory
+    owner: tomcat
+    group: tomcat
+  become: true
 
 - name: Create our templated config files
   template:
