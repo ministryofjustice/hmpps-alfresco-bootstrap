@@ -7,16 +7,21 @@
 - name: Reconfigure our logging services so we audit correctly
   include: configure_auditing.yml
 
-- name: Ensure we have our alfresco logging directories in place
+- name: Ensure we have our alfresco directories in place with the correct owners
   file:
-    path: "/usr/share/tomcat/{{ item }}"
+    path: "{{ item }}"
     state: directory
     owner: tomcat
     group: tomcat
     mode: 775
+    recurse: true
   become: true
   with_items:
-    - shared/classes/extension
+    - /usr/share/tomcat/shared/classes/extension
+    - /usr/share/tomcat/shared/classes/alfresco/hazelcast
+    - /srv/alf_data/contentstore
+    - /srv/alf_data/contentstore.deleted
+    - /srv/cache
 
 - name: Ensure we have our logging properties installed
   copy:
@@ -53,14 +58,6 @@
     slingshot_properties: /usr/share/tomcat/shared/classes/alfresco/web-extension/custom-slingshot-application-context.xml
     hz_aws_properties: /usr/share/tomcat/shared/classes/alfresco/hazelcast/hazelcast-tcp.xml
 
-- name: Ensure we have our hazlecast properties dir
-  file:
-    dest: /usr/share/tomcat/shared/classes/alfresco/hazelcast
-    state: directory
-    owner: tomcat
-    group: tomcat
-  become: true
-
 - name: Create our templated config files
   template:
     src: "{{ role_path }}/templates/{{ item.file }}"
@@ -74,25 +71,6 @@
     - { file: "web-scripts-config-custom.xml", dest: "{{ admin_properties }}" }
     - { file: "context.xml", dest: "/usr/share/tomcat/conf/context.xml" }
     - { file: "hazelcast-tcp.xml", dest: "{{ hz_aws_properties }}" }
-
-
-- name: Download our shared session jar files, this will move to the packer builder
-  get_url:
-    url: "{{ item }}"
-    dest: "/usr/share/tomcat/lib/{{ item|basename }}"
-    owner: tomcat
-    group: tomcat
-  with_items:
-    - https://repo1.maven.org/maven2/de/javakaffee/msm/memcached-session-manager/2.3.2/memcached-session-manager-2.3.2.jar
-    - https://repo1.maven.org/maven2/de/javakaffee/msm/memcached-session-manager-tc7/2.3.2/memcached-session-manager-tc7-2.3.2.jar
-    - https://repo1.maven.org/maven2/net/spy/spymemcached/2.12.3/spymemcached-2.12.3.jar
-
-- name: Ensure our mounts have the correct permissions
-  file:
-    owner: tomcat
-    group: tomcat
-    dest: /srv/cache
-    recurse: true
 
 - name: Get our installed package list
   yum:
