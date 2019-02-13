@@ -7,22 +7,31 @@
 - name: Reconfigure our logging services so we audit correctly
   include: configure_auditing.yml
 
-- name: Ensure we have our alfresco logging directory in place
+- name: Ensure we have our alfresco directories in place with the correct owners
   file:
-    path: /usr/share/tomcat/shared/classes/extension
+    path: "{{ item }}"
     state: directory
     owner: tomcat
     group: tomcat
     mode: 775
+    recurse: true
   become: true
+  with_items:
+    - /usr/share/tomcat/shared/classes/extension
+    - /usr/share/tomcat/shared/classes/alfresco/hazelcast
+    - /srv/alf_data/contentstore
+    - /srv/alf_data/contentstore.deleted
+    - /srv/cache
 
 - name: Ensure we have our logging properties installed
   copy:
     src: "{{ role_path }}/files/log4j.properties"
-    dest: /usr/share/tomcat/shared/classes/extension/log4j.properties
+    dest: "/usr/share/tomcat/{{ item }}"
     owner: tomcat
     group: tomcat
   become: true
+  with_items:
+    - shared/classes/extension/log4j.properties
 
 - name: Get our ghostscript version
   command: "ghostscript --version"
@@ -47,45 +56,21 @@
     admin_properties: /usr/share/tomcat/shared/classes/alfresco/extension/web-scripts-config-custom.xml
     interface_ip: "{{ instance_facts.ansible_facts.ansible_ec2_local_ipv4 }}"
     slingshot_properties: /usr/share/tomcat/shared/classes/alfresco/web-extension/custom-slingshot-application-context.xml
+    hz_aws_properties: /usr/share/tomcat/shared/classes/alfresco/hazelcast/hazelcast-tcp.xml
 
 - name: Create our templated config files
   template:
     src: "{{ role_path }}/templates/{{ item.file }}"
     dest: "{{ item.dest }}"
+    owner: tomcat
+    group: tomcat
   with_items:
     - { file: "alfresco-global.properties", dest: "{{ alf_properties }}" }
     - { file: "custom-slingshot-application-context.xml", dest: "{{ slingshot_properties }}" }
     - { file: "share-config-custom.xml", dest: "{{ csrf_properties }}" }
     - { file: "web-scripts-config-custom.xml", dest: "{{ admin_properties }}" }
     - { file: "context.xml", dest: "/usr/share/tomcat/conf/context.xml" }
-
-- name: Download our shared session jar files, this will move to the packer builder
-  get_url:
-    url: "{{ item }}"
-    dest: "/usr/share/tomcat/lib/{{ item|basename }}"
-    owner: tomcat
-    group: tomcat
-  with_items:
-    - https://repo1.maven.org/maven2/de/javakaffee/msm/memcached-session-manager/2.3.2/memcached-session-manager-2.3.2.jar
-    - https://repo1.maven.org/maven2/de/javakaffee/msm/memcached-session-manager-tc7/2.3.2/memcached-session-manager-tc7-2.3.2.jar
-    - https://repo1.maven.org/maven2/net/spy/spymemcached/2.12.3/spymemcached-2.12.3.jar
-
-- name: Ensure our mounts have the correct permissions
-  file:
-    owner: tomcat
-    group: tomcat
-    dest: /srv/cache
-    recurse: true
-
-- name: Ensure we have our correct repo dirs on the mount
-  file:
-    state: directory
-    path:  "{{ item }}"
-    owner: tomcat
-    group: tomcat
-  with_items:
-    - /srv/alf_data/contentstore
-    - /srv/alf_data/contentstore.deleted
+    - { file: "hazelcast-tcp.xml", dest: "{{ hz_aws_properties }}" }
 
 - name: Get our installed package list
   yum:
@@ -109,25 +94,11 @@
         path: /etc/nginx/conf.d/default.conf
         state: absent
 
-    - name: Start our nginx service
+    - name: Restart our nginx service
       service:
         name: nginx
-        state: started
+        state: restarted
 
   when:
     - nginx_installed > 0
 
-# To be removed as we are using base tomcat, currently we still have the service in play on integration, it is removed in
-# alf ami's going forward but we'll cause issues if we remove it from here for now
-- name: Install our custom service
-  service:
-    name: tomcat-alfresco
-    state: stopped
-    enabled: true
-  ignore_errors: true
-
-- name: Start alfresco
-  service:
-    name: tomcat-alfresco
-    state: started
-  ignore_errors: true

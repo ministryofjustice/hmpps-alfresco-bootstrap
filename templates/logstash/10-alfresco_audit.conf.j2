@@ -1,23 +1,25 @@
 filter {
-    grok {
-        match => ["message", "%{SYSLOGTIMESTAMP} (?:%{SYSLOGHOST} )?%{DATA}: %{GREEDYDATA:data}"]
-        overwrite => ["message"]
-    }
-    mutate {
-        gsub => [
-            "data", "\.\.\.$", "",
-            "data", "\n[a-zA-Z]{3}\s{1,}\d{1,} [0-9]{2}:[0-9]{2}:[0-9]{2} \w+ \w+: \.{3}", ""
-        ]
-        join => ["data", ""]
-    }
-    json {
-        source => "data"
-        target => "audit"
-        remove_field => ["data", "message"]
-    }
-    date {
-        match => ["[audit][time]", "UNIX_MS"]
-        target => "@timestamp"
+    if [fields][document_type] == "alfresco-audit" {
+        grok {
+            match => ["message", "%{SYSLOGTIMESTAMP} (?:%{SYSLOGHOST} ) ?%{DATA}: %{GREEDYDATA:data}"]
+            overwrite => ["message"]
+        }
+        mutate {
+            gsub => [
+                "data", "\.\.\.$", "",
+                "data", "\n[a-zA-Z]{3}\s{1,}\d{1,} [0-9]{2}:[0-9]{2}:[0-9]{2} \w+ \w+: \.{3}", ""
+            ]
+            join => ["data", ""]
+        }
+        json {
+            source => "data"
+            target => "audit"
+            remove_field => ["data", "message"]
+        }
+        date {
+            match => ["[audit][time]", "UNIX_MS"]
+            target => "@timestamp"
+        }
     }
 }
 

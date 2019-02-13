@@ -6,29 +6,15 @@ filebeat:
   prospectors:
     - type: log
       paths:
-        - /var/log/*
-      encoding: utf-8
-      multiline:
-        pattern: ^\[
-        negate: false
-        match: after
-        max_lines: 500
-        timeout: 5s
-    - type: log
-      paths:
-        - /var/log/*.*
-      encoding: utf-8
-      multiline:
-        pattern: ^\[
-        negate: false
-        match: after
-        max_lines: 500
-        timeout: 5s
-    - type: log
-      paths:
         - /var/log/nginx/access.log
       fields:
-        document_type: nginx-access
+        document_type: nginx
+      tags: ["nginx"]
+    - type: log
+      paths:
+        - /var/log/nginx/error.log
+      fields:
+        document_type: nginx
       tags: ["nginx"]
     - type: log
       paths:
@@ -40,8 +26,8 @@ filebeat:
       enabled: true
       paths:
         - /var/log/alfresco/audit.log
-      multiline.pattern: '^[a-zA-Z]{3}\s{1,}[0-9]{1,} [0-9]{2}:[0-9]{2}:[0-9]{2} \w+ \w+: \.{3}.*$'
-      multiline.negate: false
+      multiline.pattern: '^[a-zA-Z]{3}\s{1,}[0-9]{1,} [0-9]{2}:[0-9]{2}:[0-9]{2} \w+-\w+ \w+: \{.*$'
+      multiline.negate: true
       multiline.match: after
       fields:
         document_type: alfresco
@@ -53,8 +39,8 @@ filebeat:
         document_type: alfresco
       tags: ["alfresco-log"]
       multiline:
-        pattern: ^\[
-        negate: false
+        pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}
+        negate: true
         match: after
         max_lines: 500
         timeout: 5s
