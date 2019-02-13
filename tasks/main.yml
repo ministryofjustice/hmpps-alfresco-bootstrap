@@ -16,7 +16,6 @@
     mode: 775
   become: true
   with_items:
-#    - webapps/alfresco/WEB-INF/classes/
     - shared/classes/extension
 
 - name: Ensure we have our logging properties installed
@@ -27,7 +26,6 @@
     group: tomcat
   become: true
   with_items:
-#    - webapps/alfresco/WEB-INF/classes/log4j.properties
     - shared/classes/extension/log4j.properties
 
 - name: Get our ghostscript version
@@ -96,9 +94,6 @@
     dest: /srv/cache
     recurse: true
 
-- name: Mount our efs volumes
-  include: efs.yml
-
 - name: Get our installed package list
   yum:
     list: installed
@@ -128,11 +123,4 @@
 
   when:
     - nginx_installed > 0
-
-- name: Get hazelcast aws plugin
-  get_url:
-    url: https://github.com/hazelcast/hazelcast-aws/releases/download/v2.2/hazelcast-aws-2.2.jar
-    dest: /usr/share/tomcat/lib/hazelcast-aws-2.2.jar
-    owner: tomcat
-    group: tomcat
 
