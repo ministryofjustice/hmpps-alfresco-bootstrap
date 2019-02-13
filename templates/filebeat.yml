@@ -30,7 +30,7 @@ filebeat:
       multiline.negate: true
       multiline.match: after
       fields:
-        document_type: alfresco
+        document_type: alfresco-audit
       tags: ["alfresco-audit"]
     - type: log
       paths:
