@@ -13,7 +13,7 @@
     state: directory
     owner: tomcat
     group: tomcat
-    mode: 775
+    mode: 0775
     recurse: true
   become: true
   with_items:
