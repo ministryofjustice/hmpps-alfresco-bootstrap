@@ -25,7 +25,7 @@
         <!--optional, default is us-east-1 -->
         <region>{{ aws_region|default('eu-west-2')}}</region>
         <!-- optional, only instances belonging to this group will be discovered, default will try all running instances -->
-        <security-group-name>alfresco-dev-delius-core-alfresco-api-in</security-group-name>
+        <security-group-name>{{ alfresco_sg_name|default('') }}</security-group-name>
         <tag-key>type</tag-key>
         <tag-value>hz-nodes</tag-value>
       </aws>
