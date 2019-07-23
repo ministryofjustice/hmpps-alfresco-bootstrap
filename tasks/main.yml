@@ -102,3 +102,15 @@
   when:
     - nginx_installed > 0
 
+- name: install sqs worker service systemd unit file
+  template: 
+    src: "{{ role_path }}/templates/sqs/sqs_worker.j2"
+    dest: /etc/systemd/system/sqs_worker.service
+
+- name: sqs worker service
+  systemd:
+    name: sqs_worker.service
+    state: started 
+    enabled: yes
+    daemon_reload: yes
+
