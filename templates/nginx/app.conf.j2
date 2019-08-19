@@ -33,7 +33,6 @@ server {
                 proxy_set_header        host    $host;
                 proxy_set_header        X-Forwarded-Server      $host;
         }
-
         location /alfresco {
                 proxy_pass http://tomcat_server/alfresco;
                 proxy_set_header        X-Real-IP       $remote_addr;
@@ -78,4 +77,19 @@ server {
                 # auth_basic "Restricted";
                 # auth_basic_user_file /etc/nginx/conf.d/.kibana.users;
        }
+        location /_vti_inf.html {
+                proxy_pass http://tomcat_server/_vti_inf.html;
+                proxy_set_header        X-Real-IP       $remote_addr;
+                proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header        host    $host;
+                proxy_set_header        X-Forwarded-Server      $host;
+        }
+        location /_vti_bin {
+                proxy_pass http://tomcat_server/_vti_bin;
+                proxy_set_header        X-Real-IP       $remote_addr;
+                proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header        host    $host;
+                proxy_set_header        X-Forwarded-Server      $host;
+        }
+
 }
