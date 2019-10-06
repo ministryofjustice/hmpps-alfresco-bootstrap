@@ -69,12 +69,10 @@
   become: true
 
 - name: Comment out our rsyslog forwarding rule
-  lineinfile:
-    path: /etc/rsyslog.conf
-    regexp: '^*.* @@monitoring.alfresco-dev.internal:2514'
-    line: '# *.* @@monitoring.alfresco-dev.internal:2514'
+  template:
+    src: "{{ role_path }}/templates/rsyslog/rsyslog.conf.j2"
+    dest: "/etc/rsyslog.conf"
   become: true
-  ignore_errors: true
 
 - name: Replace our awslogs conf file
   template:
