@@ -1,7 +1,7 @@
 output {
     stdout { }
     elasticsearch {
-        hosts => ["{{ monitoring_host }}"]
+        hosts => ["{{ logstash_host }}"]
         index => "{{ logstash_index|default('alfresco-logstash') }}-%{+YYYY.MM.dd}"
     }
 }
