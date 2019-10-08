@@ -1,11 +1,14 @@
 ---
 
 - name: Gather instance facts
-  ec2_facts:
+  ec2_metadata_facts:
   register: instance_facts
 
 - name: Reconfigure our logging services so we audit correctly
   include: configure_auditing.yml
+
+- name: Reconfigure our system time sync
+  include: configure_time.yml
 
 - name: Ensure we have our alfresco directories in place with the correct owners
   file:
@@ -86,6 +89,13 @@
       template:
         src: "{{ role_path }}/templates/nginx/app.conf.j2"
         dest: "/etc/nginx/conf.d/app.conf"
+        group: nginx
+        owner: nginx
+    
+    - name: Install nginx config
+      template:
+        src: "{{ role_path }}/templates/nginx/nginx.conf"
+        dest: "/etc/nginx/nginx.conf"
         group: nginx
         owner: nginx
 

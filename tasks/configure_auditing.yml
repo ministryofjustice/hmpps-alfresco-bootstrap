@@ -21,6 +21,11 @@
         hostname: "{{ ansible_env.HMPPS_ROLE }}-{{ instance_name }}"
   when: ansible_env.HMPPS_ROLE|default(False)
 
+- name: Reload systemd daemon
+  systemd:
+    name: awslogs
+    daemon_reload: true
+
 - name: Stop our services to reconfigure them
   service:
     name: "{{ item }}"
