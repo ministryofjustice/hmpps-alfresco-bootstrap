@@ -33,7 +33,6 @@
   with_items:
     - logstash
     - filebeat
-    - rsyslog
     - awslogs
   become: true
 
@@ -78,6 +77,8 @@
     src: "{{ role_path }}/templates/rsyslog/rsyslog.conf.j2"
     dest: "/etc/rsyslog.conf"
   become: true
+  notify:
+    - restart rsyslog
 
 - name: Replace our awslogs conf file
   template:
@@ -91,6 +92,5 @@
   with_items:
     - logstash
     - filebeat
-    - rsyslog
     - awslogs
   become: true
