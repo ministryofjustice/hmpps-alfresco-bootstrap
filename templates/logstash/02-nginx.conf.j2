@@ -1,0 +1,14 @@
+filter {
+	if [fields][document_type] == "nginx" {
+		if "_grokparsefailure" in [tags] {
+            drop { }
+     }
+     grok {
+        	patterns_dir => "/opt/logstash/patterns"
+          match => [ "message", "%{NGINX_ACCESS_LOG}" ]
+      }
+      geoip {
+      		source => "clientIP"
+    	}
+	}
+}
