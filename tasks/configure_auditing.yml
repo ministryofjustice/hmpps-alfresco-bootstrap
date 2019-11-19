@@ -60,6 +60,7 @@
     dest: "/etc/logstash/conf.d/{{ item }}"
   with_items:
     - "01-logstash-filebeat-input.conf"
+    - "02-nginx.conf"
     - "10-alfresco_audit.conf"
     - "20_catalina.conf"
     - "50_logstash-output.conf"
