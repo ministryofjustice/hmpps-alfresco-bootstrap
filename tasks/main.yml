@@ -74,6 +74,7 @@
     - { file: "web-scripts-config-custom.xml", dest: "{{ admin_properties }}" }
     - { file: "context.xml", dest: "/usr/share/tomcat/conf/context.xml" }
     - { file: "hazelcast-tcp.xml", dest: "{{ hz_aws_properties }}" }
+    - { file: "server.xml", dest: "/usr/share/tomcat/conf/server.xml" }
 
 - name: Get our installed package list
   yum:

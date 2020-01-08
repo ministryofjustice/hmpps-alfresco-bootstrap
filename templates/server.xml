@@ -74,7 +74,7 @@
                connectionTimeout="20000"
                redirectPort="8443"
                maxHttpHeaderSize="32768"
-	       maxthreads="150" />
+               maxthreads="{{ tomcat_maxthreads }}" />
     <!-- A "Connector" using the shared thread pool-->
     <!--
     <Connector executor="tomcatThreadPool"
