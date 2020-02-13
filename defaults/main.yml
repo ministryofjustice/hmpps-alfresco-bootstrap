@@ -1,0 +1,10 @@
+---
+## SOLR_Options
+solr_index: false
+solr_host: localhost
+solr_port: 8983
+solr_base_url: /solr
+
+# controls
+manage_auditing: true
+running_in_test_mode: false 
