@@ -90,3 +90,23 @@ file = /var/log/nginx/error.log
 log_group_name = {{ cldwatch_log_group }}
 log_stream_name = {{ hostname }}/error_log
 datetime_format = %b %d %H:%M:%S
+
+{% if solr_stream_logs == 'enabled' %}
+[/opt/solr/alfresco-search-services/logs/solr.log]
+file = /opt/solr/alfresco-search-services/logs/solr.log
+log_group_name = {{ cldwatch_log_group }}
+log_stream_name = {{ hostname }}/solr_log
+datetime_format = %b %d %H:%M:%S
+
+[/opt/solr/alfresco-search-services/logs/solr-8983-console.log]
+file = /opt/solr/alfresco-search-services/logs/solr-8983-console.log
+log_group_name = {{ cldwatch_log_group }}
+log_stream_name = {{ hostname }}/solr_8983_console_log
+datetime_format = %b %d %H:%M:%S
+
+[/opt/solr/alfresco-search-services/logs/solr_gc.log]
+file = /opt/solr/alfresco-search-services/logs/solr_gc.log*
+log_group_name = {{ cldwatch_log_group }}
+log_stream_name = {{ hostname }}/solr_gc_log
+datetime_format = %b %d %H:%M:%S
+{% endif %}
