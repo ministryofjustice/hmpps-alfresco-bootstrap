@@ -6,6 +6,8 @@
 
 - name: Reconfigure our logging services so we audit correctly
   include: configure_auditing.yml
+  when:
+    - manage_auditing
 
 - name: Reconfigure our system time sync
   include: configure_time.yml
@@ -76,6 +78,14 @@
     - { file: "hazelcast-tcp.xml", dest: "{{ hz_aws_properties }}" }
     - { file: "server.xml", dest: "/usr/share/tomcat/conf/server.xml" }
 
+
+- name: install nginx
+  package:
+    name: nginx
+    state: present
+  when:
+    - running_in_test_mode
+
 - name: Get our installed package list
   yum:
     list: installed
@@ -85,31 +95,28 @@
   set_fact:
     nginx_installed: "{{ packages_installed.results|selectattr('name', 'search', 'nginx')|list|length }}"
 
-- block:
-    - name: Install our templates
-      template:
-        src: "{{ role_path }}/templates/nginx/app.conf.j2"
-        dest: "/etc/nginx/conf.d/app.conf"
-        group: nginx
-        owner: nginx
-    
-    - name: Install nginx config
-      template:
-        src: "{{ role_path }}/templates/nginx/nginx.conf"
-        dest: "/etc/nginx/nginx.conf"
-        group: nginx
-        owner: nginx
+- name: Install our templates
+  template:
+    src: "{{ role_path }}/templates/nginx/app.conf.j2"
+    dest: "/etc/nginx/conf.d/app.conf"
+    group: nginx
+    owner: nginx
 
-    - name: Remove our default.conf
-      file:
-        path: /etc/nginx/conf.d/default.conf
-        state: absent
+- name: Install nginx config
+  template:
+    src: "{{ role_path }}/templates/nginx/nginx.conf"
+    dest: "/etc/nginx/nginx.conf"
+    group: nginx
+    owner: nginx
 
-    - name: Restart our nginx service
-      service:
-        name: nginx
-        state: restarted
+- name: Remove our default.conf
+  file:
+    path: /etc/nginx/conf.d/default.conf
+    state: absent
 
-  when:
-    - nginx_installed > 0
+- name: Restart our nginx service
+  service:
+    name: nginx
+    state: restarted
+
 

@@ -50,6 +50,26 @@ filebeat:
       encoding: utf-8
       type: log
 {% endif -%}
+{% if solr_stream_logs == 'enabled' %}
+    - type: log
+      paths:
+        - /opt/solr/alfresco-search-services/logs/solr.log
+      fields:
+        document_type: solr
+      tags: ["solr"]
+    - type: log
+      paths:
+        - /opt/solr/alfresco-search-services/logs/solr-8983-console.log
+      fields:
+        document_type: solr
+      tags: ["solr"]
+    - type: log
+      paths:
+        - /opt/solr/alfresco-search-services/logs/solr_gc.log*
+      fields:
+        document_type: solr
+      tags: ["solr"]
+{% endif -%}
 
 output:
   logstash:
