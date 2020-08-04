@@ -1,5 +1,4 @@
 ---
-
 - name: Gather instance facts
   ec2_metadata_facts:
   register: instance_facts
@@ -71,13 +70,20 @@
     group: tomcat
   with_items:
     - { file: "alfresco-global.properties", dest: "{{ alf_properties }}" }
-    - { file: "custom-slingshot-application-context.xml", dest: "{{ slingshot_properties }}" }
+    - {
+        file: "custom-slingshot-application-context.xml",
+        dest: "{{ slingshot_properties }}",
+      }
     - { file: "share-config-custom.xml", dest: "{{ csrf_properties }}" }
     - { file: "web-scripts-config-custom.xml", dest: "{{ admin_properties }}" }
     - { file: "context.xml", dest: "/usr/share/tomcat/conf/context.xml" }
     - { file: "hazelcast-tcp.xml", dest: "{{ hz_aws_properties }}" }
     - { file: "server.xml", dest: "/usr/share/tomcat/conf/server.xml" }
 
+- name: Tomcat service autostart set
+  service:
+    name: tomcat
+    enabled: true
 
 - name: install nginx
   package:
@@ -118,5 +124,3 @@
   service:
     name: nginx
     state: restarted
-
-
