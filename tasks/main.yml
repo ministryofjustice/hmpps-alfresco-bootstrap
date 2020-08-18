@@ -36,6 +36,7 @@
   become: true
   with_items:
     - shared/classes/extension/log4j.properties
+    - shared/classes/alfresco/extension/log4j.properties
 
 - name: Get our ghostscript version
   command: "ghostscript --version"
