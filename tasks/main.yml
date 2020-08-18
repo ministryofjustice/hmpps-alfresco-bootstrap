@@ -26,6 +26,8 @@
     - /srv/alf_data/contentstore
     - /srv/alf_data/contentstore.deleted
     - /srv/cache
+    - /usr/share/tomcat/shared/classes/alfresco
+    - /usr/share/tomcat/shared/classes/alfresco/extension
 
 - name: Ensure we have our logging properties installed
   copy:
