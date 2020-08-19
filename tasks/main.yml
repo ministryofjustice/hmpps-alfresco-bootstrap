@@ -39,8 +39,8 @@
   with_items:
     - shared/classes/extension/log4j.properties
     - shared/classes/alfresco/extension/log4j.properties
-    
-- name: Ensure we have our logging properties installed
+
+- name: Ensure we have our custom logging properties installed
   copy:
     src: "{{ role_path }}/files/custom-log4j.properties"
     dest: "/usr/share/tomcat/{{ item }}"
