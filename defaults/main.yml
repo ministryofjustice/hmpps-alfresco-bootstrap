@@ -10,3 +10,5 @@ solr_stream_logs: disabled
 manage_auditing: true
 running_in_test_mode: false
 
+elasticsearch_url: localhost:9200
+elasticsearch_cluster_name: test
