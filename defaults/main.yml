@@ -5,6 +5,7 @@ solr_host: localhost
 solr_port: 8983
 solr_base_url: /solr
 solr_stream_logs: disabled
+solr_cmis_managed: false
 
 # controls
 manage_auditing: true
