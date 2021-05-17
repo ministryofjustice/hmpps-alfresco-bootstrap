@@ -3,11 +3,12 @@ on:
   push:
     branches:
       - develop
+      - patch/remove-github-action
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@develop
+      - uses: actions/checkout@main
       - name: Bump version and push tag
         uses: anothrNick/github-tag-action@1.33.0
         env:
